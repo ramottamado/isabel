@@ -1,0 +1,7 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/var/home/ramot/.local/share/sdkman/candidates/spark/current/python",
+        "/var/home/ramot/.local/share/sdkman/candidates/spark/current/python/lib/py4j-0.10.9.7-src.zip",
+        "/var/home/ramot/.local/share/sdkman/candidates/spark/current/python/lib/pyspark.zip"
+    ]
+}
