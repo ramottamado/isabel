@@ -3,6 +3,7 @@ import time
 from pyspark.sql import SparkSession
 from pyspark.sql.types import Row
 from pyspark.sql.dataframe import DataFrame
+from pyspark.sql.streaming import StreamingQuery
 
 
 JDBC_PROP = {"user": "postgres", "password": "pass"}
@@ -43,11 +44,11 @@ def write_to_kafka(df: DataFrame):
     pass
 
 
-spark = SparkSession.builder.appName(
+spark: SparkSession = SparkSession.builder.appName(
     "Structured Streaming Kafka Integration"
 ).getOrCreate()
 
-stream_df = (
+stream_df: DataFrame = (
     spark.readStream.format("kafka")
     .option(
         "kafka.bootstrap.servers", "kafka.nadzieja.test:9092"
@@ -56,7 +57,7 @@ stream_df = (
     .load()
 )
 
-message_df = (
+message_df: DataFrame = (
     stream_df.selectExpr(
         "from_json(cast(value as string), 'nama STRING, alasan STRING') as message"
     )
@@ -64,7 +65,7 @@ message_df = (
     .filter("nama is not null")
 )
 
-writer = (
+writer: StreamingQuery = (
     message_df.writeStream.trigger(processingTime="10 seconds")
     .foreachBatch(process_dataframe)
     .start()
